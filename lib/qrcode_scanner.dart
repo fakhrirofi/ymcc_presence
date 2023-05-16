@@ -104,55 +104,60 @@ class _FoundCodeScreenState extends State<FoundCodeScreen> {
     var eventId = globals.selectedEventId;
     var enc = widget.value;
     // make request here
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("QRcode information"),
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () {
-            globals.cameraController.start();
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_outlined,
+    return WillPopScope(
+        onWillPop: () async {
+          globals.cameraController.start();
+          return true;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text("QRcode information"),
+            centerTitle: true,
+            leading: IconButton(
+              onPressed: () {
+                globals.cameraController.start();
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.arrow_back_outlined,
+              ),
+            ),
           ),
-        ),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                "Scanned Code",
-                style: TextStyle(
-                  fontSize: 20,
-                ),
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "Scanned Code",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  FutureBuilder(
+                    future: API.attend(enc, eventId),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Text(snapshot.data.toString());
+                      } else {
+                        return const Text('Loading...');
+                      }
+                    },
+                  ),
+                  // Text(
+                  //   API.getEvent().then((data) => data).toString(),
+                  //   style: const TextStyle(
+                  //     fontSize: 16,
+                  //   ),
+                  // ),
+                ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              FutureBuilder(
-                future: API.attend(enc, eventId),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(snapshot.data.toString());
-                  } else {
-                    return const Text('Loading...');
-                  }
-                },
-              ),
-              // Text(
-              //   API.getEvent().then((data) => data).toString(),
-              //   style: const TextStyle(
-              //     fontSize: 16,
-              //   ),
-              // ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
