@@ -1,6 +1,6 @@
 # ymcc_presence
 
-A new Flutter project.
+Application used for attendance at [YMCC Event](https://github.com/fakhrirofi/attendance-server). Edit `host` and `apiKey` on lib/api.dart before doing the build.
 
 ## Getting Started
 
